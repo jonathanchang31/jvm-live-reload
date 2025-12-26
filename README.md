@@ -92,6 +92,14 @@ change in your application to make it live-reloading-ready:
 - The `main` method must only finish when your application is completely
   stopped.
 
+<!-- prettier-ignore-start -->
+> [!NOTE]
+> This plugin makes your application run in a non-forked JVM. If your application
+> somehow relies on running inside an isolated JVM process, you should ensure that 
+> this change won’t cause any issues. In most cases, however, you probably won’t even
+> notice a difference.
+<!-- prettier-ignore-end -->
+
 Implementing this logic will also make your application lifecycle more
 predictable in general, so they are just nice to have besides making an
 application live-reloading-ready. Read an article **[⏹️ Making your JVM
@@ -348,13 +356,13 @@ whether their own setup will work.
   </tr>
   <tr>
     <td><a href="https://github.com/zio/zio">zio</a> + <a href="https://github.com/zio/zio-http">zio-http</a> + <a href="https://github.com/zio/zio-config">zio-config-typesafe</a></td>
-    <td><i>zio</i> <b>2.1.21 (!)</b>, <i>zio-http</i> <b>3.5.1</b>, <i>zio-config</i> <b>4.0.5</b></td>
+    <td><i>zio</i> <b>2.1.21</b>, <i>zio-http</i> <b>3.5.1</b>, <i>zio-config</i> <b>4.0.5</b></td>
     <td>See <code>zio-*</code> in <a href="https://github.com/seroperson/jvm-live-reload/tree/main/sbt/src/sbt-test/sbt-live-reload">sbt-test</a> folder.</td>
     <td>Only <code>/health</code> endpoint.</td>
   </tr>
   <tr>
     <td><a href="https://github.com/http4s/http4s">http4s-ember-server</a> + <a href="https://github.com/typelevel/cats-effect">cats-effect</a> + <a href="https://github.com/pureconfig/pureconfig">pureconfig</a></td>
-    <td><i>http4s-ember-server</i> <b>0.23.30</b>, <i>cats-effect</i> <b>3.6.1 (!)</b>, <i>pureconfig</i> <b>0.17.9</b></td>
+    <td><i>http4s-ember-server</i> <b>0.23.30</b>, <i>cats-effect</i> <b>3.6.1</b>, <i>pureconfig</i> <b>0.17.9</b></td>
     <td>See <code>http4s-*</code> in <a href="https://github.com/seroperson/jvm-live-reload/tree/main/sbt/src/sbt-test/sbt-live-reload">sbt-test</a> folder.</td>
     <td>Only <code>/health</code> endpoint.</td>
   </tr>
@@ -372,7 +380,7 @@ whether their own setup will work.
   </tr>
   <tr>
     <td><a href="https://github.com/http4k/http4k">http4k</a></td>
-    <td><i>http4k</i> <b>5.47.0.0</b>, <b>6.18.1.0</b></td>
+    <td><i>http4k</i> <b>5.47.0.0</b>, but <b>6.x</b> should work too</td>
     <td><a href="https://github.com/seroperson/jvm-live-reload/blob/main/gradle/plugin/plugin/src/functionalTest/kotlin/me.seroperson.reload.live.gradle/LiveReloadHttp4kTest.kt">LiveReloadHttp4kTest.kt</a></td>
     <td>Everything from <a href="#changes-to-the-application-code">this section</a>.</td>
   </tr>
@@ -383,6 +391,8 @@ whether their own setup will work.
     <td>Everything from <a href="#changes-to-the-application-code">this section</a>.</td>
   </tr>
 </table>
+
+Everything was tested under JDK 17, but later versions should work too.
 
 ## License
 
@@ -430,4 +440,5 @@ SOFTWARE.
 [13]: https://seroperson.me/2025/10/20/interrupting-jvm-application/
 [14]: https://www.jetbrains.com/help/idea/tuning-the-ide.html#procedure-jvm-options
 [15]: https://seroperson.me/2025/11/28/jvm-live-reload/
+[16]: https://github.com/Philippus/sbt-dotenv
 <!-- prettier-ignore-end -->
