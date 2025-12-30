@@ -1,8 +1,8 @@
 import sbt._
 import sbt.Keys._
 
-// Copied from playframework repository
 object Commands {
+
   val quickPublish = Command.command(
     "quickPublish",
     Help.more(

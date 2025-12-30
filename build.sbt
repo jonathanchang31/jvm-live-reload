@@ -1,5 +1,5 @@
-lazy val scala212 = "2.12.20"
-lazy val scala213 = "2.13.16"
+lazy val scala212 = "2.12.21"
+lazy val scala213 = "2.13.18"
 lazy val scala3 = "3.7.2"
 lazy val supportedScalaVersions = List(scala212, scala213, scala3)
 lazy val supportedScalaSbtVersions = List(scala212, scala3)
@@ -65,7 +65,12 @@ lazy val javaProjectSettings = Seq(
   autoScalaLibrary := false
 )
 
-lazy val `sbtLiveReload` = (projectMatrix in file("sbt"))
+LocalRootProject / name := "root"
+LocalRootProject / publish / skip := true
+LocalRootProject / publishLocal / skip := true
+LocalRootProject / publishM2 / skip := true
+
+lazy val `sbt-live-reload` = (projectMatrix in file("sbt"))
   .enablePlugins(SbtPlugin)
   .enablePlugins(BuildInfoPlugin)
   .settings(
@@ -84,7 +89,7 @@ lazy val `sbtLiveReload` = (projectMatrix in file("sbt"))
     scriptedLaunchOpts += version.apply { v => s"-Dproject.version=$v" }.value
   )
   .jvmPlatform(scalaVersions = supportedScalaSbtVersions)
-  .dependsOn(`buildLink`)
+  .dependsOn(`build-link`)
   .dependsOn(`runner`)
 
 lazy val `webserver` = (project in file("core/webserver"))
@@ -92,39 +97,34 @@ lazy val `webserver` = (project in file("core/webserver"))
   .settings(
     name := "jvm-live-reload-webserver",
     description := "Development-mode proxy webserver for Live Reload experience on JVM",
-    libraryDependencies := Seq(
-      "io.undertow" % "undertow-core" % "2.3.20.Final"
-    )
+    libraryDependencies := Seq(Dependencies.undertow)
   )
-  .dependsOn(`buildLink`)
+  .dependsOn(`build-link`)
 
 lazy val `runner` = (project in file("core/runner"))
   .settings(javaProjectSettings)
   .settings(
     name := "jvm-live-reload-runner",
     description := "Contains an universal Live Reload webserver initialization and reloading logic",
-    libraryDependencies := Seq(
-      "org.playframework" % "play-file-watch" % "3.0.0-M4",
-      "org.jline" % "jline" % "3.30.6"
-    )
+    libraryDependencies := Seq(Dependencies.playFileWatch, Dependencies.jline)
   )
-  .dependsOn(`buildLink`)
+  .dependsOn(`build-link`)
 
-lazy val `buildLink` = (project in file("core/build-link"))
+lazy val `build-link` = (project in file("core/build-link"))
   .settings(javaProjectSettings)
   .settings(
     name := "jvm-live-reload-build-link",
     description := "Contains classes which shared between build system and application runtime"
   )
 
-lazy val `hookScala` = (projectMatrix in file("core/hook-scala"))
+lazy val `hook-scala` = (projectMatrix in file("core/hook-scala"))
   .settings(
     name := "jvm-live-reload-hook-scala",
     description := "Predefined set of hooks for popular Scala webframeworks",
     libraryDependencies := Seq(
-      "dev.zio" %% "zio-http" % "3.5.1" % Provided,
-      "org.typelevel" %% "cats-effect" % "3.6.3" % Provided
+      Dependencies.zio % Provided,
+      Dependencies.catsEffect % Provided
     )
   )
   .jvmPlatform(scalaVersions = supportedScalaVersions)
-  .dependsOn(`buildLink`)
+  .dependsOn(`build-link`)
