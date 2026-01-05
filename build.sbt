@@ -81,7 +81,7 @@ lazy val `sbt-live-reload` = (projectMatrix in file("sbt"))
     (pluginCrossBuild / sbtVersion) := {
       scalaBinaryVersion.value match {
         case "2.12" => "1.11.7"
-        case _      => "2.0.0-RC6"
+        case _      => "2.0.0-RC8"
       }
     },
     buildInfoKeys := Seq[BuildInfoKey](version),
