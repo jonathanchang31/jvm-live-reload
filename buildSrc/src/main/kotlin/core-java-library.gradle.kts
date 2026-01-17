@@ -1,10 +1,17 @@
 plugins {
     `java-library`
     `maven-publish`
+    id("com.diffplug.spotless")
 }
 
 group = "me.seroperson"
 version = readVersion()
+
+spotless {
+    java {
+        googleJavaFormat()
+    }
+}
 
 java {
     toolchain {

@@ -1,15 +1,19 @@
-lazy val scala212 = "2.12.20"
-lazy val scala213 = "2.13.16"
-lazy val scala3 = "3.7.2"
+lazy val scala212 = "2.12.21"
+lazy val scala213 = "2.13.18"
+lazy val scala3 = "3.7.4"
 lazy val supportedScalaVersions = List(scala212, scala213, scala3)
 lazy val supportedScalaSbtVersions = List(scala212, scala3)
 
+javacOptions ++= Seq(
+  "-encoding",
+  "UTF-8"
+)
 scalacOptions ++= Seq(
   "-deprecation",
   "-feature",
   "-unchecked",
   "-encoding",
-  "utf8"
+  "UTF-8"
 ) ++
   (CrossVersion.partialVersion(scalaVersion.value) match {
     case Some((2, _)) => Seq("-Xsource:3")
@@ -46,9 +50,6 @@ addCommandAlias(
 )
 addCommandAlias("quickScripted", "quickPublish;scripted")
 
-addCommandAlias("fmtCheckAll", "javafmtCheckAll;scalafmtCheckAll")
-addCommandAlias("fmtAll", "javafmtAll;scalafmtAll")
-
 // if version was pinned already, read from file, otherwise generate new
 version := {
   val versionFile = file("version.txt")
@@ -62,7 +63,8 @@ version := {
 lazy val javaProjectSettings = Seq(
   crossScalaVersions := List(scala212),
   crossPaths := false,
-  autoScalaLibrary := false
+  autoScalaLibrary := false,
+  Compile / unmanagedSourceDirectories := (Compile / javaSource).value :: Nil
 )
 
 LocalRootProject / name := "root"
@@ -71,8 +73,7 @@ LocalRootProject / publishLocal / skip := true
 LocalRootProject / publishM2 / skip := true
 
 lazy val `sbt-live-reload` = (projectMatrix in file("sbt"))
-  .enablePlugins(SbtPlugin)
-  .enablePlugins(BuildInfoPlugin)
+  .enablePlugins(SbtPlugin, BuildInfoPlugin)
   .settings(
     name := "sbt-live-reload",
     description := "Provides an universal Live Reload experience for web applications built with sbt",
@@ -80,7 +81,7 @@ lazy val `sbt-live-reload` = (projectMatrix in file("sbt"))
     scriptedBatchExecution := false,
     (pluginCrossBuild / sbtVersion) := {
       scalaBinaryVersion.value match {
-        case "2.12" => "1.11.7"
+        case "2.12" => "1.12.0"
         case _      => "2.0.0-RC8"
       }
     },
@@ -89,8 +90,7 @@ lazy val `sbt-live-reload` = (projectMatrix in file("sbt"))
     scriptedLaunchOpts += version.apply { v => s"-Dproject.version=$v" }.value
   )
   .jvmPlatform(scalaVersions = supportedScalaSbtVersions)
-  .dependsOn(`build-link`)
-  .dependsOn(`runner`)
+  .dependsOn(`build-link`, `runner`)
 
 lazy val `webserver` = (project in file("core/webserver"))
   .settings(javaProjectSettings)
@@ -124,7 +124,11 @@ lazy val `hook-scala` = (projectMatrix in file("core/hook-scala"))
     libraryDependencies := Seq(
       Dependencies.zio % Provided,
       Dependencies.catsEffect % Provided
-    )
+    ) ++ (scalaBinaryVersion.value match {
+        // https://github.com/sbt/sbt/issues/8328
+        case "3" => Seq("org.scala-lang" %% "scala3-library" % scalaVersion.value)
+        case _   => Seq.empty
+      })
   )
   .jvmPlatform(scalaVersions = supportedScalaVersions)
   .dependsOn(`build-link`)

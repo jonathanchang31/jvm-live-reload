@@ -1,7 +1,7 @@
 plugins {
     `kotlin-dsl`
     `java-gradle-plugin`
-    id("com.diffplug.spotless") version "8.0.0"
+    id("com.diffplug.spotless")
     id("com.gradle.plugin-publish") version "2.0.0"
     id("com.github.gmazzo.buildconfig") version "5.7.0"
 }

@@ -3,18 +3,18 @@ package me.seroperson.reload.live.mill.test
 import mill.testkit.IntegrationTester
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import scala.util.Using
-import os.ProcessOutput
 import org.scalatest.funsuite.AnyFunSuite
+import os.ProcessOutput
+import scala.util.Using
 
 class IntegrationTests extends AnyFunSuite {
 
   private lazy val client = OkHttpClient()
 
   private def runUntil(
-    url: String,
-    expectedStatus: Int,
-    expectedBody: String,
+      url: String,
+      expectedStatus: Int,
+      expectedBody: String
   ): Boolean = {
     val request: Request = Request.Builder().url(url).build()
 
@@ -43,7 +43,7 @@ class IntegrationTests extends AnyFunSuite {
     val tester = new IntegrationTester(
       daemonMode = false,
       workspaceSourcePath = resourceDir,
-      millExecutable = os.Path(BuildInfo.exePath),
+      millExecutable = os.Path(BuildInfo.exePath)
       // debugLog = true
     )
 
@@ -61,8 +61,12 @@ class IntegrationTests extends AnyFunSuite {
     runThread.start()
 
     val greet = runUntil("http://localhost:9000/greet", 200, "Hello World")
-    tester.modifyFile(tester.workspacePath / "app" / "src" / "App.scala", _ => os.read(resourceDir / "changes" / "app" / "src" / "App.scala.1"))
-    val greetReloaded = runUntil("http://localhost:9000/greet_reloaded", 200, "World Hello")
+    tester.modifyFile(
+      tester.workspacePath / "app" / "src" / "App.scala",
+      _ => os.read(resourceDir / "changes" / "app" / "src" / "App.scala.1")
+    )
+    val greetReloaded =
+      runUntil("http://localhost:9000/greet_reloaded", 200, "World Hello")
 
     tester.close()
 
@@ -75,7 +79,7 @@ class IntegrationTests extends AnyFunSuite {
     val tester = new IntegrationTester(
       daemonMode = false,
       workspaceSourcePath = resourceDir,
-      millExecutable = os.Path(BuildInfo.exePath),
+      millExecutable = os.Path(BuildInfo.exePath)
       // debugLog = true
     )
 
@@ -93,8 +97,12 @@ class IntegrationTests extends AnyFunSuite {
     runThread.start()
 
     val greet = runUntil("http://localhost:9000/greet", 200, "Hello World")
-    tester.modifyFile(tester.workspacePath / "app" / "src" / "App.scala", _ => os.read(resourceDir / "changes" / "app" / "src" / "App.scala.1"))
-    val greetReloaded = runUntil("http://localhost:9000/greet_reloaded", 200, "World Hello")
+    tester.modifyFile(
+      tester.workspacePath / "app" / "src" / "App.scala",
+      _ => os.read(resourceDir / "changes" / "app" / "src" / "App.scala.1")
+    )
+    val greetReloaded =
+      runUntil("http://localhost:9000/greet_reloaded", 200, "World Hello")
 
     tester.close()
 
@@ -107,7 +115,7 @@ class IntegrationTests extends AnyFunSuite {
     val tester = new IntegrationTester(
       daemonMode = false,
       workspaceSourcePath = resourceDir,
-      millExecutable = os.Path(BuildInfo.exePath),
+      millExecutable = os.Path(BuildInfo.exePath)
       // debugLog = true
     )
 
@@ -124,9 +132,18 @@ class IntegrationTests extends AnyFunSuite {
     runThread.start()
 
     val greet = runUntil("http://localhost:9000/greet", 200, "Hello World")
-    tester.modifyFile(tester.workspacePath / "project-a" / "src" / "App.scala", _ => os.read(resourceDir / "changes" / "project-a" / "src" / "App.scala.1"))
-    tester.modifyFile(tester.workspacePath / "project-b" / "src" / "Text.scala", _ => os.read(resourceDir / "changes" / "project-b" / "src" / "Text.scala.1"))
-    val greetReloaded = runUntil("http://localhost:9000/greet_reloaded", 200, "World Hello!")
+    tester.modifyFile(
+      tester.workspacePath / "project-a" / "src" / "App.scala",
+      _ =>
+        os.read(resourceDir / "changes" / "project-a" / "src" / "App.scala.1")
+    )
+    tester.modifyFile(
+      tester.workspacePath / "project-b" / "src" / "Text.scala",
+      _ =>
+        os.read(resourceDir / "changes" / "project-b" / "src" / "Text.scala.1")
+    )
+    val greetReloaded =
+      runUntil("http://localhost:9000/greet_reloaded", 200, "World Hello!")
 
     tester.close()
 
@@ -139,7 +156,7 @@ class IntegrationTests extends AnyFunSuite {
     val tester = new IntegrationTester(
       daemonMode = false,
       workspaceSourcePath = resourceDir,
-      millExecutable = os.Path(BuildInfo.exePath),
+      millExecutable = os.Path(BuildInfo.exePath)
       // debugLog = true
     )
 
@@ -156,9 +173,16 @@ class IntegrationTests extends AnyFunSuite {
     runThread.start()
 
     val greet = runUntil("http://localhost:9000/greet", 200, "Hello World 1")
-    tester.modifyFile(tester.workspacePath / "app" / "src" / "App.scala", _ => os.read(resourceDir / "changes" / "App.scala.1"))
-    tester.modifyFile(tester.workspacePath / "app" / "resources" / "application.conf", _ => os.read(resourceDir / "changes" / "application.conf.1"))
-    val greetReloaded = runUntil("http://localhost:9000/greet_reloaded", 200, "World Hello 2")
+    tester.modifyFile(
+      tester.workspacePath / "app" / "src" / "App.scala",
+      _ => os.read(resourceDir / "changes" / "App.scala.1")
+    )
+    tester.modifyFile(
+      tester.workspacePath / "app" / "resources" / "application.conf",
+      _ => os.read(resourceDir / "changes" / "application.conf.1")
+    )
+    val greetReloaded =
+      runUntil("http://localhost:9000/greet_reloaded", 200, "World Hello 2")
 
     tester.close()
 

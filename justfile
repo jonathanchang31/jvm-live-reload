@@ -3,6 +3,7 @@ set shell := ["bash", "-c"]
 gradle := "./gradlew"
 mill := "mill"
 sbt := "sbt"
+scala-cli := "scala-cli"
 
 default: publish-local-sbt
 
@@ -57,20 +58,12 @@ publish-mill: calculate-version
   {{ mill }} mill-live-reload.publishSonatypeCentral
 
 [private]
-code-format-check-sbt:
-  {{ sbt }} fmtCheckAll
+code-format-check-scala:
+  {{ scala-cli }} fmt --check
 
 [private]
-code-format-apply-sbt:
-  {{ sbt }} fmtAll
-
-[private]
-code-format-check-mill:
-  {{ mill }} mill-live-reload.checkFormat
-
-[private]
-code-format-apply-mill:
-  {{ mill }} mill-live-reload.reformat
+code-format-apply-scala:
+  {{ scala-cli }} fmt
 
 [private]
 code-format-check-gradle:
@@ -81,11 +74,11 @@ code-format-apply-gradle:
   {{ gradle }} spotlessApply
 
 [doc('Checks formatting. Fails if formatting does not match style.')]
-code-format-check-all: code-format-check-sbt code-format-check-mill code-format-check-gradle
+code-format-check-all: code-format-check-scala code-format-check-gradle
   @echo "SUCCESS"
 
 [doc('Applies formatting.')]
-code-format-apply-all: code-format-apply-sbt code-format-apply-mill code-format-apply-gradle
+code-format-apply-all: code-format-apply-scala code-format-apply-gradle
   @echo "SUCCESS"
 
 [doc('Runs all tests.')]

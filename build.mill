@@ -9,7 +9,6 @@ import mill.*, javalib.*, javalib.publish, scalalib.*, scalalib.publish.*
 import mill.api.BuildCtx
 import mill.api.Task.Simple
 import mill.contrib.buildinfo.BuildInfo
-import mill.scalalib.scalafmt.ScalafmtModule
 import mill.util.BuildInfo.millBinPlatform
 import mill.util.BuildInfo.millVersion
 // @formatter:on
@@ -101,11 +100,7 @@ trait HookScalaModule
   )
 }
 
-object `mill-live-reload`
-    extends ScalaModule,
-      CorePublishModule,
-      BuildInfo,
-      ScalafmtModule {
+object `mill-live-reload` extends ScalaModule, CorePublishModule, BuildInfo {
 
   override def scalaVersion = "3.7.3"
 
@@ -118,10 +113,6 @@ object `mill-live-reload`
   override def mvnDeps = Seq(
     mvn"com.lihaoyi::mill-libs:$millVersion",
     mvn"org.jline:jline:3.30.6"
-  )
-
-  override def scalafmtConfig: T[Seq[PathRef]] = Task.Sources(
-    BuildCtx.workspaceRoot / ".scalafmt.conf"
   )
 
   object integration extends ScalaTests, TestModule.ScalaTest, BuildInfo {

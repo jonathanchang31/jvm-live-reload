@@ -1,8 +1,8 @@
 package build
 
-import mill.*
-import mill.*, scalalib.*, publish.*
 import me.seroperson.reload.live.mill.*
+import mill.*
+import mill.scalalib.*
 
 object app extends LiveReloadModule, ScalaModule {
 
@@ -13,6 +13,8 @@ object app extends LiveReloadModule, ScalaModule {
     mvn"com.github.pureconfig::pureconfig-core:0.17.9",
     mvn"org.typelevel::cats-effect:3.6.3"
   )
-  override def liveDevSettings = Task.Anon { Seq(DevSettingsKeys.LiveReloadIsDebug -> "true") }
+  override def liveDevSettings = Task.Anon {
+    Seq(DevSettingsKeys.LiveReloadIsDebug -> "true")
+  }
 
 }

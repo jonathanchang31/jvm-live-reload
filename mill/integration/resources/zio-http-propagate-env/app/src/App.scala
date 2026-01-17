@@ -12,11 +12,11 @@ object GreetingServer extends ZIOAppDefault {
         Response.ok
       }
     )
-  def run = Server.serve(routes)
+  def run = Server
+    .serve(routes)
     .provide(
       Server.customized,
       ZLayer.succeed(Server.Config.default.port(8080)),
       ZLayer.succeed(NettyConfig.defaultWithFastShutdown)
     )
 }
-

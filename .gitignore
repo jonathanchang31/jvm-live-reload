@@ -24,3 +24,6 @@ build/
 metals.sbt
 .bloop/
 *.semanticdb
+
+# scala-cli output
+.scala-build
