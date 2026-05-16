@@ -38,6 +38,7 @@ class ReloadHandler implements HttpHandler {
       server.close();
     } catch (Exception e) {
       logger.error("Error during reloading", e);
+      httpServerExchange.setStatusCode(500);
     }
   }
 }
